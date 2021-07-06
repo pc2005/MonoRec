@@ -15,16 +15,16 @@ target_image_size = (256, 512)
 
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
-dataset = KittiOdometryDataset("data/kitti", sequences=["07"], target_image_size=target_image_size, frame_count=2,
+dataset = KittiOdometryDataset("example/data/kitti", sequences=["07"], target_image_size=target_image_size, frame_count=2,
                                depth_folder="image_depth_annotated", lidar_depth=True, use_dso_poses=True,
                                use_index_mask=None)
 
 # Next three lines are a hack required because Kitti files are incomplete
 dataset._dataset_sizes = [1000]
-dataset._datasets[0].cam2_files = [f"data/kitti/sequences/07/image_2/{i:06d}.png" for i in range(dataset._dataset_sizes[0])]
-dataset._datasets[0].cam3_files = [f"data/kitti/sequences/07/image_3/{i:06d}.png" for i in range(dataset._dataset_sizes[0])]
+dataset._datasets[0].cam2_files = [f"example/data/kitti/sequences/07/image_2/{i:06d}.png" for i in range(dataset._dataset_sizes[0])]
+dataset._datasets[0].cam3_files = [f"example/data/kitti/sequences/07/image_3/{i:06d}.png" for i in range(dataset._dataset_sizes[0])]
 
-checkpoint_location = Path("../saved/checkpoints/monorec_depth_ref.pth")
+checkpoint_location = Path("./saved/checkpoints/monorec_depth_ref.pth")
 
 inv_depth_min_max = [0.33, 0.0025]
 
