@@ -153,8 +153,8 @@ class KittiOdometryDataset(Dataset):
 
     def preprocess_depth_dso(self, depth: Image.Image, dso_depth_parameters, crop_box=None):
         h, w, f_x = dso_depth_parameters
-        depth = np.array(depth, dtype=np.float)
-        indices = np.array(np.nonzero(depth), dtype=np.float)
+        depth = np.array(depth, dtype=float)
+        indices = np.array(np.nonzero(depth), dtype=float)
         indices[0] = np.clip(indices[0] / depth.shape[0] * h, 0, h-1)
         indices[1] = np.clip(indices[1] / depth.shape[1] * w, 0, w-1)
 
@@ -177,14 +177,14 @@ class KittiOdometryDataset(Dataset):
         data[1] = np.clip(data[1] / crop_width * self.target_image_size[1], 0, self.target_image_size[1]-1)
 
         depth = np.zeros(self.target_image_size)
-        depth[np.around(data[0]).astype(np.int), np.around(data[1]).astype(np.int)] = data[2]
+        depth[np.around(data[0]).astype(int), np.around(data[1]).astype(int)] = data[2]
 
         return torch.tensor(depth, dtype=torch.float32)
 
     def preprocess_depth_annotated_lidar(self, depth: Image.Image, crop_box=None):
-        depth = np.array(depth, dtype=np.float)
+        depth = np.array(depth, dtype=float)
         h, w = depth.shape
-        indices = np.array(np.nonzero(depth), dtype=np.float)
+        indices = np.array(np.nonzero(depth), dtype=float)
 
         depth = depth[depth > 0]
         depth = 256.0 / depth
@@ -206,7 +206,7 @@ class KittiOdometryDataset(Dataset):
         data[1] = np.clip(data[1] / crop_width * self.target_image_size[1], 0, self.target_image_size[1] - 1)
 
         depth = np.zeros(self.target_image_size)
-        depth[np.around(data[0]).astype(np.int), np.around(data[1]).astype(np.int)] = data[2]
+        depth[np.around(data[0]).astype(int), np.around(data[1]).astype(int)] = data[2]
 
         return torch.tensor(depth, dtype=torch.float32)
 
