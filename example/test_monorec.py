@@ -56,9 +56,9 @@ depth = depth[0, 0].cpu()
 e = time.time()
 print(f"Inference took {e - s}s")
 
-plt.imsave("depth.png", prediction.detach().squeeze())
-plt.imsave("mask.png", mask.detach().squeeze())
-plt.imsave("kf.png", batch["keyframe"][0].permute(1, 2, 0).cpu().numpy() + 0.5)
+plt.imsave("output/depth.png", prediction.detach().squeeze())
+plt.imsave("output/mask.png", mask.detach().squeeze())
+plt.imsave("output/kf.png", batch["keyframe"][0].permute(1, 2, 0).cpu().numpy() + 0.5)
 
 plt.title(f"MonoRec (took {e - s}s)")
 plt.imshow(prediction.detach().squeeze(), vmin=1 / 80, vmax=1 / 5)
