@@ -15,6 +15,7 @@ target_image_size = (256, 512)
 
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
+### load data
 dataset = KittiOdometryDataset("example/data/kitti", sequences=["07"], target_image_size=target_image_size, frame_count=2,
                                depth_folder="image_depth_annotated", lidar_depth=True, use_dso_poses=True,
                                use_index_mask=None)
@@ -28,12 +29,14 @@ checkpoint_location = Path("./saved/checkpoints/monorec_depth_ref.pth")
 
 inv_depth_min_max = [0.33, 0.0025]
 
+### init model
 print("Initializing model...")
 monorec_model = MonoRecModel(checkpoint_location=checkpoint_location, inv_depth_min_max=inv_depth_min_max)
 
 monorec_model.to(device)
 monorec_model.eval()
 
+### load data
 print("Fetching data...")
 index = 164
 # Corresponds to image index 169
@@ -41,9 +44,10 @@ index = 164
 batch, depth = dataset.__getitem__(index)
 batch = map_fn(batch, unsqueezer)
 depth = map_fn(depth, unsqueezer)
-
 batch = to(batch, device)
 
+
+### run inference
 print("Starting inference...")
 s = time.time()
 with torch.no_grad():
@@ -56,6 +60,8 @@ depth = depth[0, 0].cpu()
 e = time.time()
 print(f"Inference took {e - s}s")
 
+
+### visualize results
 plt.imsave("output/depth.png", prediction.detach().squeeze())
 plt.imsave("output/mask.png", mask.detach().squeeze())
 plt.imsave("output/kf.png", batch["keyframe"][0].permute(1, 2, 0).cpu().numpy() + 0.5)
