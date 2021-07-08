@@ -553,7 +553,7 @@ class DepthModule(nn.Module):
 
     def predict_depth(self, x, scale):
         x = self.predictors[scale](x)
-        x = torch.abs(F.tanh(x))
+        x = torch.abs(torch.tanh(x))
         return x
 
 
